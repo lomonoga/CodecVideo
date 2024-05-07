@@ -11,13 +11,23 @@ output_video_path = '../resources/output/test.mp4'
 cap = cv2.VideoCapture(video_path)
 
 fps = cap.get(cv2.CAP_PROP_FPS)
-count_frame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) # Количество элементов в списке
+count_frame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))  # Количество элементов в списке
 frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 # Генерируем список случайных целых чисел в заданных границах
-random_width = [random.randint(0, frame_width - 1) for _ in range(count_frame + 10)]
-random_height = [random.randint(0, frame_height - 1) for _ in range(count_frame + 10)]
+random_count_noise_frame = [random.randint(0, frame_height - 1) for _ in
+                            range(random.randint(0, (
+                                        frame_width + frame_height) // 48))]  # Менять для уменьшения зашумления
+
+random_width = [[random.randint(0, frame_width - 1) for _ in random_count_noise_frame] for _ in
+                range(count_frame + 1)]
+random_height = [[random.randint(0, frame_height - 1) for _ in random_count_noise_frame] for _ in
+                 range(count_frame + 1)]
+
+random_Y = [random.randint(224, 255) for _ in range(count_frame + 1)]
+random_Cr = [random.randint(96, 160) for _ in range(count_frame + 1)]
+random_Cb = [random.randint(96, 160) for _ in range(count_frame + 1)]
 
 # Создание объекта видеозаписи для записи измененного видео
 out = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (frame_width, frame_height))
@@ -26,39 +36,46 @@ out = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (
 if not cap.isOpened():
     print("Ошибка: Не удалось открыть видео.")
 else:
+    number_frame = 0
+    number_YCrCb = 0
     while True:
         # Считывание кадра
         ret, frame = cap.read()
+        final_frame = frame
 
         # Проверка, успешно ли считан кадр
         if not ret:
             print("Конец видео.")
             break
 
-        # Преобразуем изображение в формат YCbCr
-        ycrcb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
+        if random.random() < 0.14:  # Шанс зашумления кадра
+            ycrcb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
 
+            y_array = random_height[number_frame]
+            x_array = random_width[number_frame]
 
-        frame_width
-        frame_height
+            for index in range(len(y_array)):
+                new_Y, new_Cr, new_Cb = (
+                    random_Y[number_YCrCb],
+                    random_Cr[number_YCrCb],
+                    random_Cb[number_YCrCb]
+                )
 
-        start_x, start_y = 100, 100  # Начальная координата x и y верхнего левого угла прямоугольной области
-        end_x, end_y = 200, 200  # Конечная координата x и y нижнего правого угла прямоугольной области
+                ycrcb_frame[y_array[index]:random.randint(y_array[index], frame_height),
+                x_array[index]:random.randint(x_array[index], frame_width), 0] = new_Y
 
-        # Задаем новые значения компонент цвета для выбранных пикселей в формате YCrCb
-        new_Y, new_Cr, new_Cb = 128, 128, 128  # Пример новых значений
+                ycrcb_frame[y_array[index]:random.randint(y_array[index], frame_height),
+                x_array[index]:random.randint(x_array[index], frame_width), 1] = new_Cr
 
-        # Меняем значения компонент цвета выбранных пикселей
-        ycrcb_frame[start_y:end_y, start_x:end_x, 0] = new_Y  # Компонента Y
-        ycrcb_frame[start_y:end_y, start_x:end_x, 1] = new_Cr  # Компонента Cr
-        ycrcb_frame[start_y:end_y, start_x:end_x, 2] = new_Cb  # Компонента Cb
+                ycrcb_frame[y_array[index]:random.randint(y_array[index], frame_height),
+                x_array[index]:random.randint(x_array[index], frame_width), 2] = new_Cb
 
+            final_frame = cv2.cvtColor(ycrcb_frame, cv2.COLOR_YCrCb2BGR)
 
+        out.write(final_frame)
 
-        bgr_frame = cv2.cvtColor(ycrcb_frame, cv2.COLOR_YCrCb2BGR)
-
-        # Запись измененного кадра в видео
-        out.write(bgr_frame)
+        number_frame += 1
+        number_YCrCb += 1
 
 # Освобождение ресурсов
 cap.release()
