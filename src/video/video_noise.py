@@ -1,13 +1,10 @@
 import random
 import cv2
 
-# Путь к исходному видеофайлу
-video_path = '../resources/clean/test.mp4'
+video_path = '../../resources/clean/test.mp4'
 
-# Путь для сохранения измененного видео
-output_video_path = '../resources/output/test.mp4'
+output_video_path = '../../resources/output/test.mp4'
 
-# Создание объекта видеозахвата для исходного видео
 cap = cv2.VideoCapture(video_path)
 
 fps = cap.get(cv2.CAP_PROP_FPS)
@@ -18,7 +15,7 @@ frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 # Генерируем список случайных целых чисел в заданных границах
 random_count_noise_frame = [random.randint(0, frame_height - 1) for _ in
                             range(random.randint(0, (
-                                        frame_width + frame_height) // 48))]  # Менять для уменьшения зашумления
+                                    frame_width + frame_height) // 48))]  # Менять для уменьшения зашумления
 
 random_width = [[random.randint(0, frame_width - 1) for _ in random_count_noise_frame] for _ in
                 range(count_frame + 1)]
@@ -29,21 +26,17 @@ random_Y = [random.randint(224, 255) for _ in range(count_frame + 1)]
 random_Cr = [random.randint(96, 160) for _ in range(count_frame + 1)]
 random_Cb = [random.randint(96, 160) for _ in range(count_frame + 1)]
 
-# Создание объекта видеозаписи для записи измененного видео
 out = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (frame_width, frame_height))
 
-# Проверка, открыт ли поток видео
 if not cap.isOpened():
     print("Ошибка: Не удалось открыть видео.")
 else:
     number_frame = 0
     number_YCrCb = 0
     while True:
-        # Считывание кадра
         ret, frame = cap.read()
         final_frame = frame
 
-        # Проверка, успешно ли считан кадр
         if not ret:
             print("Конец видео.")
             break
