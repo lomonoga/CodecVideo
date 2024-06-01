@@ -1,10 +1,9 @@
 import random
-
 import cv2
 import numpy as np
 
 
-def add_crosstalk(frame: np.ndarray, chance: float = 0.13, shift: int = 10) -> np.ndarray:
+def add_crosstalk(frame: np.ndarray, chance: float = 0.17, shift: int = random.randint(2, 12)) -> np.ndarray:
     noisy_frame = frame.copy()
     if random.uniform(0.0, 1.0) < chance:
         noisy_frame[:, shift:] = frame[:, :-shift] * random.uniform(0.1, 1.0)

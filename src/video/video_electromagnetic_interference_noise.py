@@ -4,7 +4,8 @@ import cv2
 import numpy as np
 
 
-def add_electromagnetic_interference(frame: np.ndarray, chance: float = 0.09, amplitude: int = 30) -> np.ndarray:
+def add_electromagnetic_interference(frame: np.ndarray, chance: float = random.uniform(a=0.1, b=0.33),
+                                     amplitude: int = random.randint(a=50, b=120)) -> np.ndarray:
     rows, cols, _ = frame.shape
     for i in range(rows):
         if np.random.rand() < chance:
