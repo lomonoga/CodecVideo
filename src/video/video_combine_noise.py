@@ -4,12 +4,12 @@ import all_def_noise_video as methods_noise
 
 video_path = '../../resources/clean/test.mp4'
 
-output_video_path = '../../resources/output/test.mp4'
+output_video_path = '../../resources/output/combine_noise.mp4'
 
 cap = cv2.VideoCapture(video_path)
 
 fps = cap.get(cv2.CAP_PROP_FPS)
-count_frame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
 frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
@@ -27,7 +27,7 @@ else:
 
         ycrcb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
 
-        noise_frame = methods_noise.modulation_distortion(ycrcb_frame).astype(np.uint8)
+        noise_frame = methods_noise.combine_noise_video(ycrcb_frame).astype(np.uint8)
 
         final_frame = cv2.cvtColor(noise_frame, cv2.COLOR_YCrCb2BGR)
 

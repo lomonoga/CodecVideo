@@ -1,7 +1,7 @@
 import subprocess
 
 # Пути к исходному и закодированному видео
-input_video_path = "../resources/clean/test.mp4"
+input_video_path = "../../resources/clean/test.mp4"
 output_video_path = "../resources/output/test.mp4"
 
 
