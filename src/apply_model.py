@@ -33,7 +33,7 @@ while cap.isOpened():
     if not ret:
         break
     denoised_frame = denoise_frame(frame)
-    denoised_frame = np.clip(denoised_frame, 0, 255).astype(np.uint8)
+    #denoised_frame = np.clip(denoised_frame, 0, 255).astype(np.uint8)
     out.write(denoised_frame)
 
 cap.release()
