@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-model = tf.keras.models.load_model('../resources/models/video_denoising_model.h5')
+model = tf.keras.models.load_model('../resources/models/video_denoising_autoencoder.h5')
 
 
 def denoise_frame(input_frame):
@@ -33,7 +33,7 @@ while cap.isOpened():
     if not ret:
         break
     denoised_frame = denoise_frame(frame)
-
+    denoised_frame = np.clip(denoised_frame, 0, 255).astype(np.uint8)
     out.write(denoised_frame)
 
 cap.release()

@@ -51,7 +51,8 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(3, (3, 3), activation='sigmoid', padding='same')
 ])
 
-model.compile(optimizer='adam', loss='mse')
+model.compile(optimizer='adam', loss=tf.keras.losses.MeanSquaredError())
+
 
 model.fit(generate_data(video_path), epochs=10, steps_per_epoch=100)
 
